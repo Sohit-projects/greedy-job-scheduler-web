@@ -1,0 +1,68 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greedy Job Scheduler</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    input, button { margin: 0.5rem 0; padding: 0.5rem; }
+    #output { margin-top: 2rem; white-space: pre-line; background: #f0f0f0; padding: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>Greedy Job Scheduler (C++ Backend)</h2>
+  <form id="job-form">
+    <input type="text" id="job-id" placeholder="Job ID (e.g. A)" required>
+    <input type="number" id="job-deadline" placeholder="Deadline (e.g. 2)" required>
+    <input type="number" id="job-profit" placeholder="Profit (e.g. 100)" required>
+    <button type="submit">Add Job</button>
+  </form>
+
+  <button onclick="submitJobs()">Schedule Jobs</button>
+
+  <h3>Jobs:</h3>
+  <ul id="job-list"></ul>
+
+  <h3>Result:</h3>
+  <div id="output"></div>
+
+  <script>
+    let jobs = [];
+
+    document.getElementById("job-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const id = document.getElementById("job-id").value;
+      const deadline = document.getElementById("job-deadline").value;
+      const profit = document.getElementById("job-profit").value;
+
+      jobs.push({ id, deadline: parseInt(deadline), profit: parseInt(profit) });
+
+      const li = document.createElement("li");
+      li.innerText = `${id} - Deadline: ${deadline}, Profit: ${profit}`;
+      document.getElementById("job-list").appendChild(li);
+
+      document.getElementById("job-form").reset();
+    });
+
+    function submitJobs() {
+      fetch("http://localhost:5000/schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ jobs })
+      })
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("output").innerText = data;
+        })
+        .catch(err => {
+          document.getElementById("output").innerText = "Error connecting to server.";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
