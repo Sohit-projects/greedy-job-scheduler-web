@@ -1,4 +1,4 @@
-Greedy Job Scheduler (C++ Backend + Web Interface)
+#Greedy Job Scheduler (C++ Backend + Web Interface)
 
 A full-stack project that implements the classic Greedy Job Scheduling algorithm using C++, integrated with a Web Interface using HTML, JavaScript, and Flask.
 
